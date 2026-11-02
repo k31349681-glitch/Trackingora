@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: trackora
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: RENDER
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: trackora-db
+          property: connectionString
+      - key: REDIS_URL
+        sync: false
+      - key: ADMIN_PASSWORD_HASH
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: FLIGHT_API_KEY
+        sync: false
+      - key: SHIPMENT_TRACKING_API_KEY
+        sync: false
+      - key: EMAIL_API_KEY
+        sync: false
+
+databases:
+  - name: trackora-db
+    region: frankfurt
+    plan: free
+    databaseName: trackora
+    user: trackora
